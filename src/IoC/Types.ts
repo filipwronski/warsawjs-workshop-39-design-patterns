@@ -1,5 +1,6 @@
 export const Types =
 {
     IHttp: Symbol('IHttp'),
-    ITemperatureConverter: Symbol('ITemperatureConverter')
+    IConverter: Symbol('IConverter'),
+    IStrategy: Symbol('IStrategy')
 };

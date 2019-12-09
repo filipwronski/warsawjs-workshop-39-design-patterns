@@ -1,20 +1,25 @@
-// These two imports must go first!
+import { OldPeopleRepo, YoungPeopleRepo } from './../_Tests/YoungPeopleRepo';
 import 'reflect-metadata';
+import { TemperatureSensor, Http, IHttp, IConverter, Converter } from './../TemperatureSensor';
 import { Types } from './Types';
 import { Container } from 'inversify';
 import { Main } from '../Main';
-import { TemperatureSensor } from '../temperatureSensor';
-import { ITemperatureConverter, TeperatureConverter } from '../temperatureConverter';
-import { Http, IHttp } from '../Http';
+import { IStrategy } from '../_Tests/IStrategy';
+import { IsYoungStrategy, IsOldStrategy } from '../_Tests/IsYoungStrategy';
 
 const IoC = new Container();
 
 try
 {
-    IoC.bind(Main).toSelf();
-    IoC.bind(TemperatureSensor).toSelf();
-    IoC.bind<IHttp>(Types.IHttp).to(Http);
-    IoC.bind<ITemperatureConverter>(Types.ITemperatureConverter).to(TeperatureConverter);
+    IoC.bind(Main).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind(TemperatureSensor).toSelf().inTransientScope();
+    IoC.bind<IHttp>(Types.IHttp).to(Http).inTransientScope();
+    IoC.bind<IConverter>(Types.IConverter).to(Converter).inTransientScope();
+    
+    IoC.bind<IStrategy>(Types.IStrategy).to(IsYoungStrategy).inTransientScope();
+    IoC.bind<IStrategy>(Types.IStrategy).to(IsOldStrategy).inTransientScope();
+    IoC.bind(OldPeopleRepo).toSelf().inSingletonScope();
+    IoC.bind(YoungPeopleRepo).toSelf().inSingletonScope();
 }
 catch (ex)
 {
@@ -22,3 +27,4 @@ catch (ex)
 }
 
 export { IoC };
+ 
